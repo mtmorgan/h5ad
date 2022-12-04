@@ -1,0 +1,17 @@
+Package: h5ad
+Title: Read 'anndata' files into 'R' without 'Python'
+Version: 0.0.0.9000
+Authors@R: 
+    c(person(
+        given = "Martin",
+        family = "Morgan",
+        role = c("aut", "cre"),
+        email = "mtmorgan.bioc@gmail.com",
+        comment = c(ORCID = "0000-0002-5874-8148")
+    ))
+Description: What the package does (one paragraph).
+License: Artistic-2.0
+Imports: rhdf5, dplyr, rlang, pillar, methods, S4Vectors
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.2
