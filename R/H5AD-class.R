@@ -54,6 +54,8 @@ setMethod("show", "H5AD", function(object) {
 #'
 #' @return `h5ad()` returns an object summarizing the H5AD file. The
 #'     object can be used in other calls documented on this help page.
+#'
+#' @export
 h5ad <-
     function(url)
 {

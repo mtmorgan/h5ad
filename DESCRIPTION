@@ -1,6 +1,6 @@
 Package: h5ad
 Title: Read 'anndata' files into 'R' without 'Python'
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     c(person(
         given = "Martin",
@@ -9,9 +9,28 @@ Authors@R:
         email = "mtmorgan.bioc@gmail.com",
         comment = c(ORCID = "0000-0002-5874-8148")
     ))
-Description: What the package does (one paragraph).
+Description: The 'h5ad' data file format is used to represent bulk-
+    and especially single-cell sequencing data. It uses the 'hdf5'
+    file format, so is accessible from multiple programming
+    languages. This package provides facilities for discovering the
+    content of an 'h5ad' file, as well as for selectively importing
+    components fo the file (e.g., UMAP embeddings) into R. The
+    functionality does *not* rely on Python, insteading parsing the
+    h5ad file using functionality from the 'rhdf5'
+    package. Alternatives include the 'anndata' (parsing to
+    SingleCellExperiment using Python via the 'reticulate' package)
+    and 'zellkonverter' (parsing to SingleCellExperiment using either
+    native R or Python functionality).
 License: Artistic-2.0
 Imports: rhdf5, dplyr, rlang, pillar, methods, S4Vectors
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
+Suggests: 
+    BiocStyle,
+    knitr,
+    RefManageR,
+    rmarkdown,
+    sessioninfo,
+    testthat
+VignetteBuilder: knitr

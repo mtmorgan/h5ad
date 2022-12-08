@@ -1,0 +1,157 @@
+---
+title: "Introduction to the 'h5ad' package"
+author:
+  - name: Martin Morgan
+    affiliation:
+    - Roswell Park Comprehensive Cancer Center
+    email: mtmorgan.bioc@gmail.com
+output:
+  BiocStyle::html_document:
+    self_contained: yes
+    toc: true
+    toc_float: true
+    toc_depth: 2
+    code_folding: show
+date: "`r doc_date()`"
+package: "`r pkg_ver('h5ad')`"
+vignette: >
+  %\VignetteIndexEntry{Introduction to the h5ad package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    crop = NULL
+)
+```
+
+# Basics
+
+## Install `h5ad`
+
+This package is only available on GitHub. Install with
+
+```{r install, eval = FALSE}
+BiocManager::install("mtmorgan/h5ad")
+```
+
+## Citing `h5ad`
+
+Please cite this package as follows:
+
+```{r citation}
+citation("h5ad")
+```
+
+# Quick start
+
+Retrieve an `.h5ad` dataset from the [CELLxGENE][] repository.
+
+[CELLxGENE]: https://cellxgene.cziscience.com/datasets
+
+```{r "cxg-dataset", message=FALSE}
+library(cellxgenedp)
+
+dataset <-
+    datasets() |>
+    dplyr::filter(dataset_id == "65badd7a-9262-4fd1-9ce2-eb5dc0ca8039") |>
+    select(dataset_id)
+
+heart_h5ad_file <-
+    left_join(dataset, files(), by = "dataset_id")  |>
+    filter(filetype == "H5AD") |>
+    files_download(dry = FALSE)
+```
+
+Create an `h5ad()` object by referencing the h5ad file. This object
+summarizes the content of the file without loading data into memory.
+
+```{r h5ad, message = FALSE}
+library("h5ad")
+
+h5ad <- h5ad(heart_h5ad_file)
+h5ad
+```
+
+Extract the PCA or UMAP embeddings from the file.
+
+- Use `j =` to extract only some dimensions of the embedding, as
+  illustrated for PCA. The file includes 50 principle components, we
+  extract the first three.
+- Use `with =` to extract additional row- or column annotations
+  associated with each row of the embedding. The examples below
+  extract the `cell_type` classification of each cell, so that points
+  can be colored by cell type.
+
+```{r embedding}
+pca <-
+    h5ad |>
+    column_embedding("X_pca", j = 1:3, with = c("donor_id", "cell_type"))
+
+umap <-
+    h5ad |>
+    column_embedding("X_umap", with = "cell_type") |>
+    slice(sample(n()))
+
+umap |>
+    count(cell_type, sort = TRUE)
+```
+
+Use base *R* functionality for static visualization.
+
+```{r plot}
+plot(X_umap_2 ~ X_umap_1, umap, pch = ".", col = cell_type)
+```
+
+Interactively visualize the data using `plotly`.
+
+```{r plotly, message = FALSE}
+library(plotly)
+```
+
+```{r plotly-umap}
+plot_ly(
+    umap,
+    x = ~ X_umap_1, y =  ~ X_umap_2,
+    color = ~ cell_type,
+    colors = "Paired",
+    type = "scatter", mode = "markers", opacity = 0.5,
+    marker = list(size = 2L)
+) |>
+    ## `toWebGL()` **greatly** improves rendering performance!
+    toWebGL()
+```
+
+```{r plotly-pca-3d}
+plot_ly(
+    pca |> slice(sample(n())),
+    x = ~ X_pca_1, y = ~ X_pca_2, z = ~ X_pca_3,
+    color = ~ cell_type,
+    colors = "Paired",
+    type = "scatter3d", mode = "markers", opacity = 0.5,
+    marker = list(size = 2L)
+) |> toWebGL()
+```
+
+# Reproducibility
+
+Create the vignette.
+
+```{r create-vignette, eval=FALSE}
+rmarkdown::render("introduction-to-h5ad.Rmd", "BiocStyle::html_document")
+```
+
+Extract *R* code.
+
+```{r extract-r-code, eval = FALSE}
+knitr::knit("introduction-to-h5ad.Rmd", tangle = TRUE)
+```
+
+Session information (packages and versions used for producing this
+vignette).
+
+```{r reproduce3, echo=FALSE}
+sessionInfo()
+```
