@@ -84,7 +84,10 @@ print.h5ad_matrix_attribute <-
         is.null(j) || is.numeric(j)
     )
 
-    indptr <- h5read(path, paste0(group, "/indptr"), drop = TRUE)
+    indptr <- h5read(
+        path, paste0(group, "/indptr"),
+        bit64conversion = "double",drop = TRUE
+    )
     ## convert 'j' to index elements
     if (is.numeric(j)) {
         starts <- indptr[j] + 1L

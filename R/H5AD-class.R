@@ -112,13 +112,14 @@ setAs("character", "H5AD", function(from) h5ad(from))
 #' @param layer `character(1)` `"X"`, `"raw"` (if available), or other
 #'     layers named in the object and reported by h5ad().
 #'
-#' @param i `numeric()` (coerced to integer) or NULL row indexes to be
-#'     used when extracting elements (layers, data frames, embeddings)
-#'     from the H5AD file.
+#' @param i `logical()`, `numeric()` (coerced to
+#'     integer) or NULL row indexes to be used when extracting
+#'     elements (layers, data frames, embeddings) from the H5AD file.
 #'
-#' @param j `numeric()` (coerced to integer) or NULL column indexes to
-#'     be used when extracting elements (layers, data frames,
-#'     embeddings) from the H5AD file.
+#' @param j `character()` (for column and row data) or `logical() or
+#'     `numeric()` (coerced to integer, for layers and embeddings) or
+#'     NULL column indexes to be used when extracting elements
+#'     from the H5AD file.
 #'
 #' @param index `numeric()` (coerced to integer) or NULL indexes into
 #'     the native data representation (e.g., `1:100` returns the first
@@ -134,13 +135,17 @@ layer <-
     function(h5ad, layer = "X", i = NULL, j = NULL, index = 1:10)
 {
     h5ad <- as(h5ad, "H5AD")
+    if (is.logical(i))
+        i <- which(i)
+    if (is.logical(j))
+        j <- which(j)
     stopifnot(
         is.character(layer) &&
         length(layer) == 1L &&
         layer %in% .h5ad_layers(.url(h5ad)),
         is.null(i) || is.numeric(i),
         is.null(j) || is.numeric(j)
-    )        
+    )
 
     if (identical(layer, "raw")) {
         layer <- "raw/X"

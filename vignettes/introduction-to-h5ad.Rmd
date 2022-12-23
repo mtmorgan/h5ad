@@ -131,7 +131,7 @@ plot_ly(
     color = ~ cell_type,
     colors = "Paired",
     type = "scatter3d", mode = "markers", opacity = 0.5,
-    marker = list(size = 2L)
+    marker = list(size = 1L)
 ) |> toWebGL()
 ```
 

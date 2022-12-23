@@ -42,13 +42,13 @@ file.}
 \item{layer}{\code{character(1)} \code{"X"}, \code{"raw"} (if available), or other
 layers named in the object and reported by h5ad().}
 
-\item{i}{\code{numeric()} (coerced to integer) or NULL row indexes to be
-used when extracting elements (layers, data frames, embeddings)
-from the H5AD file.}
+\item{i}{\code{logical()}, \code{numeric()} (coerced to
+integer) or NULL row indexes to be used when extracting
+elements (layers, data frames, embeddings) from the H5AD file.}
 
-\item{j}{\code{numeric()} (coerced to integer) or NULL column indexes to
-be used when extracting elements (layers, data frames,
-embeddings) from the H5AD file.}
+\item{j}{\code{character()} (for column and row data) or \verb{logical() or }numeric()` (coerced to integer, for layers and embeddings) or
+NULL column indexes to be used when extracting elements
+from the H5AD file.}
 
 \item{index}{\code{numeric()} (coerced to integer) or NULL indexes into
 the native data representation (e.g., \code{1:100} returns the first
